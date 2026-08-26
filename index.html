@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1199,14 +1200,6 @@ button:hover{
 
 
 /* =====================================================
-   STORAGE
-   ===================================================== */
-
-const STORAGE_KEY =
-    "rallySyncToolData_v1";
-
-
-/* =====================================================
    TAB DEFINITIONS
    ===================================================== */
 
@@ -1253,6 +1246,7 @@ function createDefaultGroups(){
             ],
 
             timers:[]
+
         },
 
         {
@@ -1277,6 +1271,7 @@ function createDefaultGroups(){
             ],
 
             timers:[]
+
         },
 
         {
@@ -1301,6 +1296,7 @@ function createDefaultGroups(){
             ],
 
             timers:[]
+
         },
 
         {
@@ -1325,6 +1321,7 @@ function createDefaultGroups(){
             ],
 
             timers:[]
+
         }
 
     ];
@@ -1371,236 +1368,6 @@ let tabs =
    ===================================================== */
 
 let nextGroupId = 5;
-
-
-/* =====================================================
-   SAVE CONFIGURATION
-   ===================================================== */
-
-function saveData(){
-
-    try{
-
-        /*
-           Only save configuration data.
-
-           Timer IDs are deliberately excluded because
-           active timers should not survive a page reload.
-        */
-
-        const storageData = {
-
-            version:1,
-
-            activeTab:activeTab,
-
-            tabs:tabs
-
-        };
-
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(storageData)
-        );
-
-    }catch(error){
-
-        console.warn(
-            "Unable to save Rally Sync configuration.",
-            error
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   LOAD CONFIGURATION
-   ===================================================== */
-
-function loadData(){
-
-    try{
-
-        const saved =
-            localStorage.getItem(
-                STORAGE_KEY
-            );
-
-
-        if(!saved){
-
-            return;
-
-        }
-
-
-        const parsed =
-            JSON.parse(saved);
-
-
-        if(
-            !parsed ||
-            !parsed.tabs
-        ){
-
-            return;
-
-        }
-
-
-        /*
-           Make sure all five expected tabs exist.
-           If an older/incomplete save is found,
-           missing tabs receive their defaults.
-        */
-
-        const loadedTabs = {};
-
-
-        TAB_NAMES.forEach(
-            tabName=>{
-
-                if(
-                    parsed.tabs[tabName] &&
-                    Array.isArray(
-                        parsed.tabs[tabName].groups
-                    )
-                ){
-
-                    loadedTabs[tabName] = {
-
-                        groups:
-                            parsed.tabs[tabName].groups
-
-                    };
-
-                }else{
-
-                    loadedTabs[tabName] = {
-
-                        groups:
-                            createDefaultGroups()
-
-                    };
-
-                }
-
-            }
-        );
-
-
-        tabs =
-            loadedTabs;
-
-
-        if(
-            TAB_NAMES.includes(
-                parsed.activeTab
-            )
-        ){
-
-            activeTab =
-                parsed.activeTab;
-
-        }
-
-
-        /*
-           Find the highest existing group ID
-           so newly-added groups don't collide.
-        */
-
-        let highestId = 0;
-
-
-        TAB_NAMES.forEach(
-            tabName=>{
-
-                tabs[tabName].groups.forEach(
-                    group=>{
-
-                        if(
-                            Number(group.id) >
-                            highestId
-                        ){
-
-                            highestId =
-                                Number(group.id);
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-
-        nextGroupId =
-            Math.max(
-                5,
-                highestId + 1
-            );
-
-
-        /*
-           Timers must never be restored from storage.
-        */
-
-        TAB_NAMES.forEach(
-            tabName=>{
-
-                tabs[tabName].groups.forEach(
-                    group=>{
-
-                        group.timers = [];
-
-                        /*
-                           A page reload means a fresh
-                           application state.
-                        */
-
-                        if(
-                            !group.state ||
-                            group.state !== "idle"
-                        ){
-
-                            group.state =
-                                "idle";
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-    }catch(error){
-
-        console.warn(
-            "Unable to load Rally Sync configuration. Using defaults.",
-            error
-        );
-
-
-        tabs =
-            createDefaultTabs();
-
-
-        activeTab =
-            "12-13";
-
-
-        nextGroupId =
-            5;
-
-    }
-
-}
 
 
 /* =====================================================
@@ -1806,9 +1573,6 @@ function switchTab(tabName){
 
     activeTab =
         tabName;
-
-
-    saveData();
 
 
     render();
@@ -2069,8 +1833,6 @@ function updateGroupName(
         group.name =
             value;
 
-        saveData();
-
     }
 
 }
@@ -2098,8 +1860,6 @@ function updatePlayerName(
         group.entries[index].name =
             value;
 
-        saveData();
-
     }
 
 }
@@ -2126,8 +1886,6 @@ function updatePlayerDuration(
 
         group.entries[index].duration =
             parseInt(value) || 1;
-
-        saveData();
 
     }
 
@@ -2173,9 +1931,6 @@ function addGroup(){
 
 
     nextGroupId++;
-
-
-    saveData();
 
 
     render();
@@ -2229,9 +1984,6 @@ function addEntry(groupId){
         duration:30
 
     });
-
-
-    saveData();
 
 
     render();
@@ -2295,9 +2047,6 @@ function removeEntry(
         }
 
     }
-
-
-    saveData();
 
 
     render();
@@ -2664,9 +2413,6 @@ function movePlayerToGroup(
         }
 
 
-        saveData();
-
-
         render();
 
         return;
@@ -2702,9 +2448,6 @@ function movePlayerToGroup(
         );
 
     }
-
-
-    saveData();
 
 
     render();
@@ -2812,9 +2555,6 @@ function movePlayer(
         );
 
 
-        saveData();
-
-
         render();
 
         return;
@@ -2881,9 +2621,6 @@ function movePlayer(
         );
 
     }
-
-
-    saveData();
 
 
     render();
@@ -2992,9 +2729,6 @@ function cancelGroup(id){
     hideOverlay();
 
 
-    saveData();
-
-
     render();
 
 }
@@ -3030,9 +2764,6 @@ function hideGroup(id){
 
     group.hidden =
         true;
-
-
-    saveData();
 
 
     render();
@@ -3484,9 +3215,6 @@ function beginLaunch(group){
                 "complete";
 
 
-            saveData();
-
-
             /*
                render() unlocks the tabs because
                the group is now COMPLETE rather
@@ -3601,9 +3329,6 @@ function confirmResetAll(){
     hideOverlay();
 
 
-    saveData();
-
-
     hideResetModal();
 
 
@@ -3657,9 +3382,6 @@ resetModal.addEventListener(
    INITIAL LOAD
    ===================================================== */
 
-loadData();
-
-
 const container =
     document.getElementById(
         "groups"
@@ -3668,10 +3390,8 @@ const container =
 
 render();
 
-
-passwordInput.focus();
-
 </script>
 
 </body>
 </html>
+```
