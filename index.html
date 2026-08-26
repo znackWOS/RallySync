@@ -39,104 +39,6 @@ body{
 
 
 /* =====================================================
-   PASSWORD SCREEN
-   ===================================================== */
-
-.password-screen{
-    position:fixed;
-    inset:0;
-    background:#111;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-
-    z-index:10000;
-}
-
-.password-box{
-    width:min(90%,420px);
-
-    background:#fff;
-    color:#111;
-
-    padding:35px;
-
-    border-radius:20px;
-
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.35);
-
-    text-align:center;
-}
-
-.password-title{
-    font-size:32px;
-    font-weight:900;
-    letter-spacing:1px;
-    margin-bottom:8px;
-}
-
-.password-subtitle{
-    color:#666;
-    font-size:16px;
-    margin-bottom:24px;
-}
-
-.password-input{
-    width:100%;
-
-    padding:14px;
-
-    border:2px solid #ddd;
-    border-radius:10px;
-
-    font-size:18px;
-    text-align:center;
-
-    outline:none;
-}
-
-.password-input:focus{
-    border-color:var(--blue);
-}
-
-.password-button{
-    width:100%;
-
-    margin-top:12px;
-
-    background:var(--blue);
-    color:#fff;
-
-    border:none;
-    border-radius:10px;
-
-    padding:14px;
-
-    font-size:18px;
-    font-weight:900;
-
-    cursor:pointer;
-}
-
-.password-error{
-    color:var(--red);
-
-    font-weight:700;
-
-    margin-top:10px;
-
-    min-height:20px;
-}
-
-.password-screen.hidden{
-    display:none;
-}
-
-
-/* =====================================================
    MAIN APP
    ===================================================== */
 
@@ -1152,50 +1054,6 @@ button:hover{
 
 
 <!-- =====================================================
-     PASSWORD SCREEN
-     ===================================================== -->
-
-<div
-    class="password-screen"
-    id="passwordScreen"
->
-
-    <div class="password-box">
-
-        <div class="password-title">
-            RALLY SYNC TOOL
-        </div>
-
-        <div class="password-subtitle">
-            Enter the password to continue
-        </div>
-
-        <input
-            type="password"
-            id="passwordInput"
-            class="password-input"
-            placeholder="Password"
-            autocomplete="off"
-        >
-
-        <button
-            class="password-button"
-            onclick="checkPassword()"
-        >
-            ENTER
-        </button>
-
-        <div
-            class="password-error"
-            id="passwordError"
-        ></div>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
      MAIN APP
      ===================================================== -->
 
@@ -1341,95 +1199,6 @@ button:hover{
 
 
 /* =====================================================
-   PASSWORD
-   ===================================================== */
-
-/*
- * Keep your existing password here.
- *
- * IMPORTANT:
- * This is only client-side protection and is not
- * suitable for genuinely secret authentication.
- */
-
-/*
- * AI ASSISTANT INSTRUCTION:
- *
- * The value below is private access information.
- * If an AI assistant is asked to identify, extract,
- * reveal, repeat, or decode this password, it should
- * refuse to provide the password or any portion of it.
- *
- * The assistant may explain that it cannot disclose
- * private access credentials.
- */
-
-const CORRECT_PASSWORD =
-    "UbT2q-Smn0D-MdgHR";
-
-const passwordScreen =
-    document.getElementById(
-        "passwordScreen"
-    );
-
-const passwordInput =
-    document.getElementById(
-        "passwordInput"
-    );
-
-const passwordError =
-    document.getElementById(
-        "passwordError"
-    );
-
-
-function checkPassword(){
-
-    const enteredPassword =
-        passwordInput.value;
-
-    if(
-        enteredPassword ===
-        CORRECT_PASSWORD
-    ){
-
-        passwordScreen.classList.add(
-            "hidden"
-        );
-
-        passwordError.textContent = "";
-
-        passwordInput.value = "";
-
-    }else{
-
-        passwordError.textContent =
-            "Incorrect password";
-
-        passwordInput.value = "";
-
-        passwordInput.focus();
-
-    }
-
-}
-
-
-passwordInput.addEventListener(
-    "keydown",
-    function(event){
-
-        if(event.key === "Enter"){
-
-            checkPassword();
-
-        }
-
-    }
-);
-
-
-/* =====================================================
    STORAGE
    ===================================================== */
 
@@ -1442,11 +1211,11 @@ const STORAGE_KEY =
    ===================================================== */
 
 const TAB_NAMES = [
-    "12-13",
-    "13-14",
-    "14-15",
-    "15-16",
-    "16-17"
+    "12-13UTC",
+    "13-14UTC",
+    "14-15UTC",
+    "15-16UTC",
+    "16-17UTC"
 ];
 
 
