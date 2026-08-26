@@ -683,9 +683,35 @@ button:hover{
     align-items:center;
     justify-content:center;
 
+    gap:7px;
+
     font-size:11px;
 
     color:#666;
+}
+
+.privacy-link{
+    background:none;
+
+    border:none;
+
+    padding:0;
+
+    color:#666;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    text-decoration:underline;
+}
+
+.privacy-link:hover{
+    color:#111;
+
+    transform:none;
 }
 
 
@@ -872,6 +898,95 @@ button:hover{
 
 
 /* =====================================================
+   PRIVACY POLICY MODAL
+   ===================================================== */
+
+.privacy-modal{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.65);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:21000;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.15s ease;
+}
+
+.privacy-modal.show{
+    opacity:1;
+
+    pointer-events:auto;
+}
+
+.privacy-box{
+    width:min(90%,560px);
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    background:#fff;
+
+    border-radius:16px;
+
+    padding:28px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.35);
+}
+
+.privacy-title{
+    font-size:25px;
+
+    font-weight:900;
+
+    margin-bottom:16px;
+}
+
+.privacy-content{
+    color:#444;
+
+    font-size:14px;
+
+    line-height:1.6;
+}
+
+.privacy-content p{
+    margin:0 0 14px;
+}
+
+.privacy-content strong{
+    color:#111;
+}
+
+.privacy-close{
+    width:100%;
+
+    margin-top:10px;
+
+    background:#111;
+
+    color:#fff;
+
+    padding:10px;
+
+    font-size:13px;
+}
+
+
+/* =====================================================
    SMALL SCREENS
    ===================================================== */
 
@@ -969,6 +1084,20 @@ button:hover{
         padding:6px 2px;
     }
 
+    .privacy-box{
+        width:95%;
+
+        padding:20px;
+    }
+
+    .privacy-title{
+        font-size:21px;
+    }
+
+    .privacy-content{
+        font-size:13px;
+    }
+
 }
 
 
@@ -1045,6 +1174,10 @@ button:hover{
         font-size:9px;
     }
 
+    .privacy-link{
+        font-size:9px;
+    }
+
 }
 
 </style>
@@ -1114,7 +1247,22 @@ button:hover{
 
 
     <div class="footer">
-        Rally Sync Tool
+
+        <span>
+            Rally Sync Tool
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <button
+            class="privacy-link"
+            onclick="showPrivacyModal()"
+        >
+            Privacy Policy
+        </button>
+
     </div>
 
 </div>
@@ -1189,6 +1337,78 @@ button:hover{
             </button>
 
         </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     PRIVACY POLICY MODAL
+     ===================================================== -->
+
+<div
+    class="privacy-modal"
+    id="privacyModal"
+>
+
+    <div class="privacy-box">
+
+        <div class="privacy-title">
+            Privacy Policy
+        </div>
+
+        <div class="privacy-content">
+
+            <p>
+                <strong>Rally Sync Tool</strong> is a
+                browser-based tool designed to help organise
+                and synchronise rally groups and players.
+            </p>
+
+            <p>
+                The information you enter into Rally Sync Tool,
+                such as player names, group names and timings,
+                is processed within your web browser.
+            </p>
+
+            <p>
+                Rally Sync Tool does not require an account and
+                does not intentionally collect or transmit the
+                information entered into the tool to the
+                developer.
+            </p>
+
+            <p>
+                The tool does not intentionally collect personal
+                information.
+            </p>
+
+            <p>
+                This website is hosted using GitHub Pages.
+                GitHub may process technical information relating
+                to visits to the website in accordance with
+                GitHub's own policies.
+            </p>
+
+            <p>
+                If the way this website operates changes in the
+                future, this privacy policy will be updated
+                accordingly.
+            </p>
+
+            <p>
+                <strong>Last updated:</strong> 26 August 2026
+            </p>
+
+        </div>
+
+        <button
+            class="privacy-close"
+            onclick="hidePrivacyModal()"
+        >
+            CLOSE
+        </button>
 
     </div>
 
@@ -1479,11 +1699,6 @@ function renderTabs(){
             button.onclick =
                 function(){
 
-                    /*
-                       Safety check in addition to
-                       pointer-events:none in CSS.
-                    */
-
                     if(
                         isAnyRallyActive()
                     ){
@@ -1507,11 +1722,6 @@ function renderTabs(){
         }
     );
 
-
-    /*
-       Show a small visual indication that
-       the time-period tabs are currently locked.
-    */
 
     if(locked){
 
@@ -1543,14 +1753,6 @@ function renderTabs(){
    ===================================================== */
 
 function switchTab(tabName){
-
-    /*
-       NEVER allow a tab change while a rally
-       is in READY or ACTIVE state.
-
-       This is the key protection against
-       accidentally cancelling a rally.
-    */
 
     if(
         isAnyRallyActive()
@@ -1600,10 +1802,6 @@ function render(){
     container.style.gridTemplateColumns =
         "repeat(4,minmax(0,1fr))";
 
-
-    /*
-       No groups.
-    */
 
     if(
         visibleGroups.length === 0
@@ -1935,11 +2133,6 @@ function addGroup(){
     render();
 
 
-    /*
-       Scroll down so the newly-created
-       group is visible.
-    */
-
     setTimeout(()=>{
 
         container.scrollTo({
@@ -2015,11 +2208,6 @@ function removeEntry(
         1
     );
 
-
-    /*
-       If there are no players left,
-       remove the entire group.
-    */
 
     if(
         group.entries.length === 0
@@ -2267,10 +2455,6 @@ function setupDragAndDrop(){
     });
 
 
-    /* =================================================
-       GROUP DROP
-       ================================================= */
-
     groupElements.forEach(
         groupElement=>{
 
@@ -2493,10 +2677,6 @@ function movePlayer(
     }
 
 
-    /*
-       REORDER WITHIN SAME GROUP
-    */
-
     if(
         sourceGroup.id ===
         targetGroup.id
@@ -2561,10 +2741,6 @@ function movePlayer(
     }
 
 
-    /*
-       MOVE TO DIFFERENT GROUP
-    */
-
     const player =
         sourceGroup.entries.splice(
             draggedEntry.index,
@@ -2606,10 +2782,6 @@ function movePlayer(
         player
     );
 
-
-    /*
-       Remove empty source group.
-    */
 
     if(
         sourceGroup.entries.length === 0
@@ -2919,11 +3091,6 @@ function startGroup(id){
     }
 
 
-    /*
-       Prevent starting another rally while
-       any rally is already running.
-    */
-
     if(
         isAnyRallyActive()
     ){
@@ -2939,11 +3106,6 @@ function startGroup(id){
     group.state =
         "readying";
 
-
-    /*
-       Render immediately so the tabs lock
-       as soon as START is pressed.
-    */
 
     render();
 
@@ -3056,11 +3218,6 @@ function beginLaunch(group){
     group.state =
         "active";
 
-
-    /*
-       Keep the tabs locked throughout
-       the active rally.
-    */
 
     render();
 
@@ -3214,12 +3371,6 @@ function beginLaunch(group){
                 "complete";
 
 
-            /*
-               render() unlocks the tabs because
-               the group is now COMPLETE rather
-               than ACTIVE.
-            */
-
             render();
 
 
@@ -3289,10 +3440,6 @@ function hideResetModal(){
 
 function confirmResetAll(){
 
-    /*
-       Stop every possible timer in every tab.
-    */
-
     TAB_NAMES.forEach(
         tabName=>{
 
@@ -3307,11 +3454,6 @@ function confirmResetAll(){
         }
     );
 
-
-    /*
-       Replace every workspace with a fresh
-       copy of the original four groups.
-    */
 
     tabs =
         createDefaultTabs();
@@ -3337,7 +3479,35 @@ function confirmResetAll(){
 
 
 /* =====================================================
-   CLOSE RESET MODAL WITH ESCAPE
+   PRIVACY POLICY MODAL
+   ===================================================== */
+
+const privacyModal =
+    document.getElementById(
+        "privacyModal"
+    );
+
+
+function showPrivacyModal(){
+
+    privacyModal.classList.add(
+        "show"
+    );
+
+}
+
+
+function hidePrivacyModal(){
+
+    privacyModal.classList.remove(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE MODALS WITH ESCAPE
    ===================================================== */
 
 document.addEventListener(
@@ -3349,6 +3519,8 @@ document.addEventListener(
         ){
 
             hideResetModal();
+
+            hidePrivacyModal();
 
         }
 
@@ -3370,6 +3542,27 @@ resetModal.addEventListener(
         ){
 
             hideResetModal();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CLOSE PRIVACY MODAL BY CLICKING BACKDROP
+   ===================================================== */
+
+privacyModal.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target ===
+            privacyModal
+        ){
+
+            hidePrivacyModal();
 
         }
 
